@@ -1,0 +1,13 @@
+###
+GET http://localhost:3001/setup
+###
+POST http://localhost:3001/
+
+Content-Type: application/json
+
+{
+    "name":"Hamza",
+    "location":"ZMC"
+}
+
+

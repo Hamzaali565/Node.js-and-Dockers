@@ -1,0 +1,55 @@
+app.get("/", async (req, res) => {
+  try {
+    let data = await pool.query("SELECT * FROM schools");
+    res.status(200).json(data.rows);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
+app.post("/", async (req, res) => {
+  try {
+    const { name, location } = req.body;
+    await pool.query("INSERT INTO schools (name , address) VALUES ($1, $2)", [
+      name,
+      location,
+    ]);
+
+    res.status(200).json({ massage: "Data saved Successfully" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
+app.get("/setup", async (req, res) => {
+  try {
+    await pool.query(
+      "CREATE TABLE schools( id SERIAL PRIMARY KEY, name VARCHAR(100), address VARCHAR(100) )"
+    );
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+
+
+# /// docker-compose.yaml
+#
+version: "3"
+services:
+  db:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: CRUD # Replace with your username if needed
+      MONGO_INITDB_ROOT_PASSWORD: hamzaali565 # Replace with your password if needed
+      MONGODB_URI: mongodb+srv://CRUD:hamzaali565@cluster0.kh990zg.mongodb.net/pracAuth?retryWrites=true&w=majorit
+  app:
+    image: my-node-app
+    ports:
+      - 13000:3001
+#
+
+
+
+# ///
